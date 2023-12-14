@@ -3,13 +3,15 @@ class PublicChatsController < ApplicationController
   before_action :set_device
 
   def show
+    welcome_message = ""
     unless @device.persisted?
       @device.create_public_chat
+      welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
     end
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@device).serializable_hash[:data]
+      data: ChatSerializer.new(@device, params: {welcome_message: welcome_message}).serializable_hash[:data]
     }, status: :ok
   end
 
