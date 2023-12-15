@@ -3,11 +3,10 @@ class PublicChatsController < ApplicationController
   before_action :set_device
 
   def show
-    welcome_message = ""
     unless @device.persisted?
       @device.create_public_chat
-      welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
     end
+    welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
 
     render json: {
       status: { code: 200 },
