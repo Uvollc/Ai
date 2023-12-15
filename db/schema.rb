@@ -31,6 +31,14 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_22_022539) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_chats", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "chat_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_chats_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
