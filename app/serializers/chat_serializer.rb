@@ -1,5 +1,7 @@
 class ChatSerializer < BaseSerializer
-  attributes :id, :chat_id, :message_count
+  attributes :id, :chat_id
+
+  attribute :message_count, if: Proc.new { |obj| obj.has_attribute?("message_count") }
 
   attribute :welcome_message, if: Proc.new { |_record, params|
     params && params[:welcome_message].present?

@@ -17,4 +17,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   resource :public_chats, only: %i[show update]
+
+  scope :user do
+    resources :chats
+  end
 end
