@@ -3,7 +3,7 @@ class ChatsController < ApplicationController
   include RackSessionsFix
 
   before_action :authenticate_user!
-  before_action :get_subscription_status, except: %i[index show]
+  # before_action :get_subscription_status, except: %i[index show]
   before_action :get_chat, except: %i[index create]
 
   def create
