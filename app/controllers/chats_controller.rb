@@ -8,10 +8,11 @@ class ChatsController < ApplicationController
 
   def create
     @chat = current_user.create_chat
+    welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
 
     render json: {
       status: { code: 200, message: 'Chat created successfully' },
-      data: ChatSerializer.new(@chat).serializable_hash[:data]
+      data: ChatSerializer.new(@chat, params: {welcome_message: welcome_message}).serializable_hash[:data]
     }, status: :ok
   end
 
