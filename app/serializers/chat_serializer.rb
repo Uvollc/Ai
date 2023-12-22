@@ -1,5 +1,5 @@
 class ChatSerializer < BaseSerializer
-  attributes :id, :message_count, :welcome_message
+  attributes :id, :message_count
 
   attribute :chat_id, &:thread_id
 
@@ -8,4 +8,8 @@ class ChatSerializer < BaseSerializer
   } do |_record, params|
     params[:run_id]
   end
+
+  attribute :welcome_message, if: Proc.new { |_record, params|
+    params && params[:welcome_flag]
+  }
 end

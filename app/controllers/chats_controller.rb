@@ -3,21 +3,20 @@ class ChatsController < ApplicationController
   include RackSessionsFix
 
   before_action :authenticate_user!
-  # before_action :get_subscription_status, except: %i[index show]
+  before_action :get_subscription_status, except: %i[index show]
   before_action :get_chat, except: %i[index create]
 
   def create
-    @chat = current_user.create_chat
-    welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
+    @chat = current_user.chats.create
 
     render json: {
       status: { code: 200, message: 'Chat created successfully' },
-      data: ChatSerializer.new(@chat, params: {welcome_message: welcome_message}).serializable_hash[:data]
+      data: ChatSerializer.new(@chat, params: { welcome_flag: true }).serializable_hash[:data]
     }, status: :ok
   end
 
   def index
-    @chat_list = current_user.user_chats
+    @chat_list = current_user.chats
 
     render json: {
       status: { code: 200 },
@@ -28,22 +27,23 @@ class ChatsController < ApplicationController
   def show
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@chat).serializable_hash[:data]
+      data: ChatSerializer.new(@chat, params: { welcome_flag: true }).serializable_hash[:data]
     }, status: :ok
   end
 
   def update
-    OpenaiApiService.create_message(@chat.chat_id, chat_params[:message])
-    OpenaiApiService.run_chat(@chat.chat_id)
+    OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
+    run_id = OpenaiApiService.run_chat(@chat.thread_id)
+    @chat.increment_message_count
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@chat).serializable_hash[:data]
+      data: ChatSerializer.new(@chat, params: {run_id: run_id}).serializable_hash[:data]
     }, status: :ok
   end
 
   def destroy
-    OpenaiApiService.delete_chat(@chat.chat_id)
+    OpenaiApiService.delete_chat(@chat.thread_id)
     @chat.destroy
 
     render json: {
@@ -64,7 +64,7 @@ class ChatsController < ApplicationController
   end
 
   def get_chat
-    @chat = UserChat.find_by(user_id: current_user.id, chat_id: params[:id])
+    @chat = Chat.find_by(usable_id: current_user.id, thread_id: params[:id])
 
     return render json: {
       status: { code: 404, message: 'No chat found for given id' },

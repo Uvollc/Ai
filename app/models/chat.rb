@@ -10,7 +10,7 @@ class Chat < ApplicationRecord
   end
 
   def reached_message_limit?
-    self.message_count == MESSAGE_LIMIT
+    self.message_count >= MESSAGE_LIMIT
   end
 
   def increment_message_count

@@ -10,7 +10,7 @@ class PublicChatsController < ApplicationController
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@device.chat).serializable_hash[:data]
+      data: ChatSerializer.new(@device.chat, params: { welcome_flag: true }).serializable_hash[:data]
     }, status: :ok
   end
 

@@ -5,20 +5,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-  has_many :user_chats, dependent: :destroy
+  has_many :chats, as: :chatable, dependent: :destroy
 
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze
   enum payment_status: PAYMENT_STATUSES
 
-  def create_chat
-    chat_id = OpenaiApiService.create_chat
-    chat = user_chats.create(chat_id: chat_id)
-
-    chat
-  end
-
   def valid_subscription?
-    return false if self.payment_status == PAYMENT_STATUSES[:pending]
+    return false if (self.payment_status == PAYMENT_STATUSES[:pending] && chats.last.reached_message_limit?)
 
     true
   end
