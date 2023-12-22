@@ -43,7 +43,6 @@ class ChatsController < ApplicationController
   end
 
   def destroy
-    OpenaiApiService.delete_chat(@chat.thread_id)
     @chat.destroy
 
     render json: {
