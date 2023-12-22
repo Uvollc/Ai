@@ -64,7 +64,7 @@ class ChatsController < ApplicationController
   end
 
   def get_chat
-    @chat = Chat.find_by(usable_id: current_user.id, thread_id: params[:id])
+    @chat = Chat.find_by(chatable_id: current_user.id, thread_id: params[:id])
 
     return render json: {
       status: { code: 404, message: 'No chat found for given id' },
