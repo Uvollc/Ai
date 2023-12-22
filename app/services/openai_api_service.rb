@@ -23,7 +23,8 @@ class OpenaiApiService
       run = AI_CLIENT.runs.create(
         thread_id: chat_id,
         parameters: {assistant_id: ENV.fetch("MEDICAL_ASSISTANT_ID")}
-      )
+      ).transform_keys(&:to_sym)
+      run[:id]
     end
 
     def wait_on_run(chat_id, run_id)
