@@ -42,6 +42,6 @@ class PublicChatsController < ApplicationController
   end
 
   def device_param
-    params.permit(:device_token)[:device_token]
+    params.permit(:device_token)[:device_token].to_s
   end
 end

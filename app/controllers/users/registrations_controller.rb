@@ -8,7 +8,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def respond_with(current_user, _opts = {})
     if resource.persisted?
-      resource.assign_public_chat(params[:user][:device_token])
+      resource.assign_public_chat(params[:user][:device_token].to_s)
 
       render json: {
         status: { code: 200, message: 'Signed up successfully.' },
