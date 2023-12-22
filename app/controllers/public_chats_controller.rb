@@ -4,30 +4,30 @@ class PublicChatsController < ApplicationController
 
   def show
     unless @device.persisted?
-      @device.create_public_chat
+      @device.build_chat
+      @device.save
     end
-    welcome_message = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@device, params: {welcome_message: welcome_message}).serializable_hash[:data]
+      data: ChatSerializer.new(@device.chat, params: { welcome_flag: true }).serializable_hash[:data]
     }, status: :ok
   end
 
-
   def update
+    @chat = @device.chat
     return render json: {
       status: { code: 403, message: 'You have exceeded the free advice quota. Signup to continue' },
-      data: ChatSerializer.new(@device).serializable_hash[:data]
-    }, status: :forbidden if @device.reached_message_limit?
+      data: ChatSerializer.new(@chat).serializable_hash[:data]
+    }, status: :forbidden if @chat.reached_message_limit?
 
-    OpenaiApiService.create_message(@device.chat_id, chat_params[:message])
-    OpenaiApiService.run_chat(@device.chat_id)
-    @device.increment_message_count
+    OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
+    run_id = OpenaiApiService.run_chat(@chat.thread_id)
+    @chat.increment_message_count
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@device).serializable_hash[:data]
+      data: ChatSerializer.new(@chat, params: { run_id: run_id}).serializable_hash[:data]
     }, status: :ok
   end
 
