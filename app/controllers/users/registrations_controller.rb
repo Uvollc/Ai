@@ -8,7 +8,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def respond_with(current_user, _opts = {})
     if resource.persisted?
-      #register_chat for when the user was not registered i.e. via device_token
+      resource.assign_public_chat(params[:user][:device_token])
+
       render json: {
         status: { code: 200, message: 'Signed up successfully.' },
         data: UserSerializer.new(current_user).serializable_hash[:data]

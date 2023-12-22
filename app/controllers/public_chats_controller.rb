@@ -34,7 +34,7 @@ class PublicChatsController < ApplicationController
   private
 
   def set_device
-    @device = Device.find_or_initialize_by(device_token: device_param)
+    @device = Device.includes(:chat).find_or_initialize_by(device_token: device_param)
   end
 
   def chat_params
