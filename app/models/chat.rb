@@ -1,7 +1,8 @@
 class Chat < ApplicationRecord
   belongs_to :chatable, polymorphic: true
 
-  before_create -> (chat) { chat.thread_id = OpenaiApiService.create_chat}
+  before_create -> (chat) { chat.thread_id = OpenaiApiService.create_chat }
+  before_destroy -> (chat) { OpenaiApiService.delete_chat(chat.thread_id) }
 
   MESSAGE_LIMIT = 3
 
