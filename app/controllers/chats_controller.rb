@@ -16,7 +16,7 @@ class ChatsController < ApplicationController
   end
 
   def index
-    @chat_list = current_user.chats
+    @chat_list = current_user.chats.order(updated_at: :desc)
 
     render json: {
       status: { code: 200 },
