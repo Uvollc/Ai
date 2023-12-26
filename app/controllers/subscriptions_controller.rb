@@ -18,7 +18,6 @@ class SubscriptionsController < ApplicationController
     if customer
       current_user.update(stripe_customer_id: customer.id)
       charge = StripeApiService.execute_subscription(customer)
-      debugger
 
       @subscription = Subscription.create(user: current_user, status: charge.status, charge_id: charge.id )
     end
