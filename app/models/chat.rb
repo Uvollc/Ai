@@ -14,7 +14,9 @@ class Chat < ApplicationRecord
     self.message_count >= MESSAGE_LIMIT
   end
 
-  def increment_message_count
-    self.update(message_count: self.message_count+1)
+  def make_messaging_updates(message)
+    self.title = message[0..50] if message_count == 0
+    self.message_count += 1
+    self.save
   end
 end

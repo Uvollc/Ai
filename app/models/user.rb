@@ -12,7 +12,7 @@ class User < ApplicationRecord
   enum payment_status: PAYMENT_STATUSES
 
   def valid_subscription?
-    return false if (self.payment_status == PAYMENT_STATUSES[:pending] && chats.last.reached_message_limit?)
+    return false if (self.payment_status == PAYMENT_STATUSES[:pending] && chats&.last&.reached_message_limit?)
 
     true
   end
@@ -22,5 +22,9 @@ class User < ApplicationRecord
     return unless device && device.chat
 
     device.chat.update(chatable: self)
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
   end
 end
