@@ -8,7 +8,7 @@ class SubscriptionsController < ApplicationController
     @invoices = StripeApiService.list_invoices(current_user.stripe_customer_id)
 
     render json: {
-      status: { code: 200, message: 'Subsctiption done successfully' },
+      status: { code: 200 },
       data: InvoiceSerializer.new(@invoices).serializable_hash[:data]
     }, status: :ok
   end
