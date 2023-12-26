@@ -40,9 +40,5 @@ class OpenaiApiService
     def delete_chat(thread_id)
       AI_CLIENT.threads.delete(id: thread_id)
     end
-
-    def delete_chat(chat_id)
-      AI_CLIENT.threads.delete(id: chat_id)
-    end
   end
 end
