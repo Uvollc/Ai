@@ -1,5 +1,5 @@
 class ChatSerializer < BaseSerializer
-  attributes :id, :message_count
+  attributes :id, :message_count, :created_at, :updated_at, :title
 
   attribute :chat_id, &:thread_id
 
