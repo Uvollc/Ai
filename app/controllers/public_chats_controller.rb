@@ -23,7 +23,7 @@ class PublicChatsController < ApplicationController
 
     OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
     run_id = OpenaiApiService.run_chat(@chat.thread_id)
-    @chat.increment_message_count
+    @chat.make_messaging_updates(chat_params[:message])
 
     render json: {
       status: { code: 200 },

@@ -16,7 +16,7 @@ class ChatsController < ApplicationController
   end
 
   def index
-    @chat_list = current_user.chats
+    @chat_list = current_user.chats.order(updated_at: :desc)
 
     render json: {
       status: { code: 200 },
@@ -34,7 +34,7 @@ class ChatsController < ApplicationController
   def update
     OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
     run_id = OpenaiApiService.run_chat(@chat.thread_id)
-    @chat.increment_message_count
+    @chat.make_messaging_updates(chat_params[:message])
 
     render json: {
       status: { code: 200 },
