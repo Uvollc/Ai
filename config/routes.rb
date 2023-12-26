@@ -20,5 +20,10 @@ Rails.application.routes.draw do
 
   scope :user do
     resources :chats
+    resources :subscriptions, only: %i[create index]
+    get :payment_methods, to: "subsciptions#list_payment_methods"
+
+    post "stripe/webhooks", to: "webhooks#create"
+    # stripe listen --forward-to localhost:3000/user/stripe/webhooks
   end
 end
