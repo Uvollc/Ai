@@ -35,6 +35,8 @@ class SubscriptionsController < ApplicationController
 
   def show
     session =  StripeApiService.retrieve_session(params[:session_id])
+    current_user.update(payment_status: User::PAYMENT_STATUSES[:paid]) if session.status == 'complete'
+
     render json: {
       status: { code: 200 },
       data: { status: session.status }
