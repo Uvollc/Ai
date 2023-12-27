@@ -11,6 +11,8 @@ class User < ApplicationRecord
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze
   enum payment_status: PAYMENT_STATUSES
 
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
+
   def valid_subscription?
     return false if (self.payment_status == PAYMENT_STATUSES[:pending] && chats&.last&.reached_message_limit?)
 
@@ -26,5 +28,9 @@ class User < ApplicationRecord
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def soft_delete
+    update(delated_at: Time.now)
   end
 end

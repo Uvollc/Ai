@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   resource :public_chats, only: %i[show update]
 
   scope :user do
+    patch 'update_password', to: 'users#update_password'
+    patch 'update_info', to: 'users#update_without_password'
+    delete 'deactivate', to: 'users#deactivate'
     resources :chats
   end
 end
