@@ -18,8 +18,12 @@ class StripeApiService
         mode: 'subscription',
         return_url: ENV.fetch("STRIPE_REDIRECT_URL"),
       })
-
+      puts "session_id #{session.id}"
       {clientSecret: session.client_secret}
+    end
+
+    def retrieve_session(session_id)
+      Stripe::Checkout::Session.retrieve(session_id)
     end
 
     def list_invoices(customer_id)
