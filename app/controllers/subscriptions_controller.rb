@@ -23,14 +23,27 @@ class SubscriptionsController < ApplicationController
     end
 
     render json: {
-      status: { code: 200, message: 'Subscription done successfully' },
-      data: client_secret.to_json
+      status: { code: 200, message: 'Session created successfully.' },
+      data: client_secret
     }, status: :ok
 
   rescue Stripe::StripeError => e
     return render json: {
       status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
-    }, status: :forbidden unless current_user.valid_subscription?
+    }, status: :forbidden
+  end
+
+  def show
+    session =  StripeApiService.retrieve_session(params[:session_id])
+    render json: {
+      status: { code: 200 },
+      data: { status: session.status }
+    }, status: :ok
+
+  rescue Stripe::StripeError => e
+    return render json: {
+      status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
+    }, status: :forbidden
   end
 
   def payment_methods
@@ -42,10 +55,6 @@ class SubscriptionsController < ApplicationController
   end
 
   private
-
-  # def checkout_params
-  #   params.require(:subscription).permit(:token)
-  # end
 
   def payment_method_params
     params.require(:payment_method).permit(:type, :object)

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :chats
     # resources :subscriptions, only: %i[create index]
     post :create_checkout_session, to: "subscriptions#create"
+    get :checkout_session_status, to: "subscriptions#show"
     get :invoices, to: "subscriptions#index"
     get :payment_methods, to: "subsciptions#list_payment_methods"
 
