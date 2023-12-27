@@ -14,17 +14,17 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    customer =  StripeApiService.find_or_create_customer(current_user, checkout_params[:token])
+    customer =  StripeApiService.find_or_create_customer(current_user)
     if customer
       current_user.update(stripe_customer_id: customer.id)
-      charge = StripeApiService.execute_subscription(customer)
+      client_secret = StripeApiService.create_checkout_session(customer)
 
-      @subscription = Subscription.create(user: current_user, status: charge.status, charge_id: charge.id )
+      # @subscription = Subscription.create(user: current_user, status: charge.status, charge_id: charge.id )
     end
 
     render json: {
-      status: { code: 200, message: 'Subsctiption done successfully' },
-      data: SubscriptionSerializer.new(@subscription).serializable_hash[:data]
+      status: { code: 200, message: 'Subscription done successfully' },
+      data: client_secret.to_json
     }, status: :ok
 
   rescue Stripe::StripeError => e
@@ -43,9 +43,9 @@ class SubscriptionsController < ApplicationController
 
   private
 
-  def checkout_params
-    params.require(:subscription).permit(:token)
-  end
+  # def checkout_params
+  #   params.require(:subscription).permit(:token)
+  # end
 
   def payment_method_params
     params.require(:payment_method).permit(:type, :object)
