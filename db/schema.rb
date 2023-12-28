@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_080706) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "invoices", force: :cascade do |t|
     t.string "status"
     t.string "currency"
     t.datetime "dated_at"

@@ -1,6 +1,6 @@
 class CreateInvoices < ActiveRecord::Migration[7.1]
   def change
-    create_table :invoices, id: :uuid do |t|
+    create_table :invoices do |t|
       t.string :status
       t.string :currency
       t.datetime :dated_at
