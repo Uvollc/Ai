@@ -6,6 +6,8 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :chats, as: :chatable, dependent: :destroy
+  has_many :invoices, dependent: :destroy
+  has_many :payment_methods, dependent: :destroy
   # has_many :devices, dependent: :destroy
 
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze

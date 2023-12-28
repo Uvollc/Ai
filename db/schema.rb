@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_22_084358) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_28_080706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,6 +29,30 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_22_084358) do
     t.string "device_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status"
+    t.string "currency"
+    t.datetime "dated_at"
+    t.float "total"
+    t.bigint "user_id"
+    t.string "stripe_invoice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.string "last_digits"
+    t.string "brand"
+    t.datetime "expiry"
+    t.string "status"
+    t.bigint "user_id"
+    t.string "stripe_method_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_payment_methods_on_user_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
