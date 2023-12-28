@@ -5,7 +5,7 @@ class SubscriptionsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @invoices = StripeApiService.list_invoices(current_user.stripe_customer_id)
+    @invoices = current_user.invoices.order(updated_at: :desc)
 
     render json: {
       status: { code: 200 },
@@ -18,8 +18,6 @@ class SubscriptionsController < ApplicationController
     if customer
       current_user.update(stripe_customer_id: customer.id)
       client_secret = StripeApiService.create_checkout_session(customer)
-
-      # @subscription = Subscription.create(user: current_user, status: charge.status, charge_id: charge.id )
     end
 
     render json: {
@@ -35,7 +33,6 @@ class SubscriptionsController < ApplicationController
 
   def show
     session =  StripeApiService.retrieve_session(params[:session_id])
-    current_user.update(payment_status: User::PAYMENT_STATUSES[:paid]) if session.status == 'complete'
 
     render json: {
       status: { code: 200 },
@@ -53,7 +50,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def list_payment_methods
-    StripeApiService.list_payment_methods(current_user.stripe_customer_id)
+    @payment_methods = current_user.payment_methods.order(updated_at: :desc)
+
+    render json: {
+      status: { code: 200 },
+      data: PaymentMethodSerializer.new(@payment_methods).serializable_hash[:data]
+    }, status: :ok
   end
 
   private

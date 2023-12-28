@@ -25,9 +25,10 @@ Rails.application.routes.draw do
     resources :chats
     # resources :subscriptions, only: %i[create index]
     post :create_checkout_session, to: "subscriptions#create"
-    get :checkout_session_status, to: "subscriptions#show"
+    get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
     get :invoices, to: "subscriptions#index"
     get :payment_methods, to: "subsciptions#list_payment_methods"
+    post 'stripe/webhooks', to: "webhooks#create"
 
     # stripe listen --forward-to localhost:3000/user/stripe/webhooks
   end

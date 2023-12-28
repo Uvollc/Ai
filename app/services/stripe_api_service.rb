@@ -46,5 +46,9 @@ class StripeApiService
     def list_payment_methods(customer_id)
       Stripe::Customer.list_payment_methods(customer_id)
     end
+
+    def cancel_subscription(subsciption_id)
+      Stripe::Subscription.cancel(subsciption_id)
+    end
   end
 end
