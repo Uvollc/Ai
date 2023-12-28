@@ -1,4 +1,4 @@
-class WebhooksController < ApplicationController
+class WebhooksController < ApiController
   def create
     webhook_secret = ENV.fetch('STRIPE_WEBOOKS_SECRET')
     payload = request.body.read

@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < ApiController
   respond_to :json
   include RackSessionsFix
 

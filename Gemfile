@@ -53,3 +53,6 @@ gem 'jsonapi-serializer'
 gem 'dotenv-rails'
 gem "ruby-openai"
 gem "stripe"
+gem "activeadmin"
+gem 'sass-rails'
+gem 'sprockets', '~>3.0'

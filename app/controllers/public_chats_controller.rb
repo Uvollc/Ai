@@ -1,4 +1,4 @@
-class PublicChatsController < ApplicationController
+class PublicChatsController < ApiController
   respond_to :json
   before_action :set_device
 

@@ -1,4 +1,4 @@
-class ChatsController < ApplicationController
+class ChatsController < ApiController
   respond_to :json
   include RackSessionsFix
 
