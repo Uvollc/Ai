@@ -12,13 +12,4 @@ ActiveAdmin.register User do
     column :deleted_at
     actions
   end
-
-  controller do
-    def destroy
-      @user = User.find(params[:id])
-      @user.soft_delete
-
-      redirect_to admin_users_path
-    end
-  end
 end
