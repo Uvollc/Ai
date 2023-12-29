@@ -35,7 +35,7 @@ class User < ApplicationRecord
   end
 
   def soft_delete
-    update(delated_at: Time.now)
-    StripeApiService.cancel_subscription(subsciption.charge_id)
+    StripeApiService.cancel_subscription(subscription.charge_id) if subscription.present?
+    update(deleted_at: Time.now)
   end
 end
