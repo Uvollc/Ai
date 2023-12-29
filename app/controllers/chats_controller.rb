@@ -1,6 +1,5 @@
 class ChatsController < ApiController
   respond_to :json
-  include RackSessionsFix
 
   before_action :authenticate_user!
   before_action :get_subscription_status, except: %i[index show]

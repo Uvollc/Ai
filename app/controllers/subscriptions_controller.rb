@@ -1,6 +1,5 @@
 class SubscriptionsController < ApiController
   respond_to :json
-  include RackSessionsFix
 
   before_action :authenticate_user!
 
