@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :invoices, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
   has_one :subscription, dependent: :destroy
+  has_one_attached :avatar, dependent: :destroy
   # has_many :devices, dependent: :destroy
 
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze

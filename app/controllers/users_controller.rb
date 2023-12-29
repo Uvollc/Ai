@@ -47,6 +47,22 @@ class UsersController < ApiController
     end
   end
 
+  def update_avatar
+    @user = current_user
+    @user&.avatar&.purge
+    @user.avatar.attach(avatar_param[:avatar])
+    if @user.avatar.attached?
+      render json: {
+        status: { code: 200, message: 'Avatar attached successfully.' },
+        data: UserSerializer.new(@user).serializable_hash[:data]
+      }, status: :ok
+    else
+      render json: {
+        status: {message: "Can't update avatar. #{@user.errors.full_messages.to_sentence}"}
+      }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def password_params
@@ -55,5 +71,9 @@ class UsersController < ApiController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :phone, :email)
+  end
+
+  def avatar_param
+    params.permit(:avatar)
   end
 end
