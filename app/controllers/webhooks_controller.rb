@@ -4,7 +4,6 @@ class WebhooksController < ApiController
     payload = request.body.read
     if !webhook_secret.empty?
       sig_header = request.env['HTTP_STRIPE_SIGNATURE']
-      puts "sig_header = #{sig_header}"
       event = nil
 
       begin
@@ -36,8 +35,8 @@ class WebhooksController < ApiController
         user: get_user(data_object.customer),
         stripe_method_id: data_object.id,
         brand: data_object.card.brand,
-        last_digits: data_object.last4,
-        expiry: "#{data_object.exp_month}/#{data_object.exp_year}")
+        last_digits: data_object.card.last4,
+        expiry: "#{data_object.card.exp_month}/#{data_object.card.exp_year}")
 
       puts "Payment Method attached: #{event.id}, payment method: #{payment_method.id}"
     when 'checkout.session.completed'
