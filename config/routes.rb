@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     patch 'update_password', to: 'users#update_password'
     patch 'update_info', to: 'users#update_without_password'
     delete 'deactivate', to: 'users#deactivate'
+    patch 'avatar', to: 'users#update_avatar'
     resources :chats
     # resources :subscriptions, only: %i[create index]
     post :create_checkout_session, to: "subscriptions#create"
