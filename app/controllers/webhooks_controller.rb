@@ -32,15 +32,14 @@ class WebhooksController < ApiController
 
     case event.type
     when 'payment_method.attached'
-      # invoice = PaymentMethod.create(
-      #   user: get_user(data_object.customer),
-      #   stripe_method_id: data_object.id,
-      #   status: data_object.status,
-      #   brand: data_object.brand,
-      #   last_digits: data_object.last_digits
-      #   expiry: unix_to_datetime(data_object.expiry))
+      payment_method = PaymentMethod.create(
+        user: get_user(data_object.customer),
+        stripe_method_id: data_object.id,
+        brand: data_object.card.brand,
+        last_digits: data_object.last4,
+        expiry: "#{data_object.exp_month}/#{data_object.exp_year}")
 
-      puts "Payment Method attached: #{event.id}"
+      puts "Payment Method attached: #{event.id}, payment method: #{payment_method.id}"
     when 'checkout.session.completed'
       user = get_user(data_object.customer)
       user.update(payment_status: User::PAYMENT_STATUSES[:paid])

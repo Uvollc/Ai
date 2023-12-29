@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_28_140419) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_29_083008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,7 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_140419) do
   create_table "payment_methods", force: :cascade do |t|
     t.string "last_digits"
     t.string "brand"
-    t.datetime "expiry"
+    t.string "expiry"
     t.string "status"
     t.bigint "user_id"
     t.string "stripe_method_id"

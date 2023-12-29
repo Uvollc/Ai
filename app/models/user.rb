@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :chats, as: :chatable, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
+  has_one :subsciption, dependent: :destroy
   # has_many :devices, dependent: :destroy
 
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze
@@ -34,5 +35,6 @@ class User < ApplicationRecord
 
   def soft_delete
     update(delated_at: Time.now)
+    StripeApiService.cancel_subscription(subsciption.charge_id)
   end
 end
