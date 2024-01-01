@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_29_162235) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_01_154856) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -101,7 +101,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_29_162235) do
     t.string "last_digits"
     t.string "brand"
     t.string "expiry"
-    t.string "status"
+    t.string "status", default: "available"
     t.bigint "user_id"
     t.string "stripe_method_id"
     t.datetime "created_at", null: false

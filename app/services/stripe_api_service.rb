@@ -50,5 +50,17 @@ class StripeApiService
     def cancel_subscription(subsciption_id)
       Stripe::Subscription.cancel(subsciption_id)
     end
+
+    def create_payment_method_session(customer_id, plan: "uvo-ai-plan")
+      session = Stripe::Checkout::Session.create({
+        payment_method_types: ['card'],
+        mode: 'setup',
+        ui_mode: 'embedded',
+        customer: customer_id,
+        return_url: ENV.fetch("PAYMENT_METHOD_REDIRECT_URL")
+      })
+
+      {clientSecret: session.client_secret}
+    end
   end
 end

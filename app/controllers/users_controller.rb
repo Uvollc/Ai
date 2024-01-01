@@ -23,7 +23,7 @@ class UsersController < ApiController
     if @user.soft_delete
       sign_out(@user)
       render json: {
-        status: { code: 200, message: 'Deactivated user account successfully.' }
+        status: { code: 200, message: 'User account deleted successfully' }
       }, status: :ok
     else
       render json: {
