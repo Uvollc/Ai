@@ -6,7 +6,7 @@ class ChatsController < ApiController
   before_action :get_chat, except: %i[index create]
 
   def create
-    return_quota_exceed if user.payment_status == User::PAYMENT_STATUS[:pending]
+    return return_quota_exceed if current_user.payment_status == User::PAYMENT_STATUSES[:pending] && current_user.chats.count > 0
     @chat = current_user.chats.create
 
     render json: {
