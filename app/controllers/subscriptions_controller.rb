@@ -53,9 +53,9 @@ class SubscriptionsController < ApiController
     }, status: :ok
 
   rescue Stripe::StripeError => e
-  return render json: {
-    status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
-  },
+    return render json: {
+      status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
+    }, status: :forbidden
   end
 
   def list_payment_methods
