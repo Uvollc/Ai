@@ -6,6 +6,7 @@ class ChatsController < ApiController
   before_action :get_chat, except: %i[index create]
 
   def create
+    return_quota_exceed if user.payment_status == User::PAYMENT_STATUS[:pending]
     @chat = current_user.chats.create
 
     render json: {
@@ -55,10 +56,14 @@ class ChatsController < ApiController
     params.require(:chat).permit(:message)
   end
 
-  def get_subscription_status
+  def return_quota_exceed
     return render json: {
       status: { code: 403, message: 'You have exceeded the free advice quota. Subscribe to continue' },
-    }, status: :forbidden unless current_user.valid_subscription?
+    }, status: :forbidden
+  end
+
+  def get_subscription_status
+    return_quota_exceed unless current_user.valid_subscription?
   end
 
   def get_chat
