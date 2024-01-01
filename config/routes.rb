@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
     get :invoices, to: "subscriptions#index"
     get :payment_methods, to: "subscriptions#list_payment_methods"
+    patch :payment_methods, to: "subscriptions#payment_methods"
     post 'stripe/webhooks', to: "webhooks#create"
 
     # stripe listen --forward-to localhost:3000/user/stripe/webhooks

@@ -40,6 +40,7 @@ class WebhooksController < ApiController
 
       puts "Payment Method attached: #{event.id}, payment method: #{payment_method.id}"
     when 'checkout.session.completed'
+      return if data_object.mode == 'setup'
       user = get_user(data_object.customer)
       user.update(payment_status: User::PAYMENT_STATUSES[:paid])
 

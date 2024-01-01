@@ -45,7 +45,17 @@ class SubscriptionsController < ApiController
   end
 
   def payment_methods
-    StripeApiService.add_payment_method(current_user.stripe_customer_id, payment_method_params[:type], payment_method_params[:object].transform_keys(&:to_sym))
+    client_secret = StripeApiService.create_payment_method_session(current_user.stripe_customer_id)
+
+    render json: {
+      status: { code: 200, message: 'Session created successfully.' },
+      data: client_secret
+    }, status: :ok
+
+  rescue Stripe::StripeError => e
+  return render json: {
+    status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
+  },
   end
 
   def list_payment_methods
