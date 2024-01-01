@@ -3,7 +3,7 @@ class PublicChatsController < ApiController
   before_action :set_device
 
   def show
-    unless @device.persisted?
+    unless @device&.chat&.present?
       @device.build_chat
       @device.save
     end
