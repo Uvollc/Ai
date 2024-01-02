@@ -54,9 +54,9 @@ class WebhooksController < ApiController
       puts "Subscription created-> event: #{event.id}, subscription: #{subsciption.id}"
     when 'customer.subscription.updated', 'customer.subscription.deleted', 'customer.subscription.paused'
       subsciption = Subscription.find_by(charge_id: data_object.id)
-      subsciption.update(status: data_object.status)
+      subsciption&.update(status: data_object.status)
 
-      puts "Subscription updated-> event: #{event.id}, subscription: #{subsciption.id} #{subsciption.status}"
+      puts "Subscription updated-> event: #{event.id}, subscription: #{subsciption&.id} #{subsciption&.status}"
     when 'invoice.created'
       invoice = Invoice.create(
         user: get_user(data_object.customer),
