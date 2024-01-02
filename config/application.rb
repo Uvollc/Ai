@@ -33,5 +33,6 @@ module UvohealthAi
     config.middleware.use ActionDispatch::Session::CookieStore
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash
+    config.autoload_paths << Rails.root.join('lib')
   end
 end
