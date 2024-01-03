@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_one_attached :avatar, dependent: :destroy
   # has_many :devices, dependent: :destroy
 
-  PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze
+  PAYMENT_STATUSES = { pending: "pending", paid: "paid", processing: "processing" }.freeze
   enum payment_status: PAYMENT_STATUSES
 
   validates :email, uniqueness: { case_sensitive: false }, presence: true
