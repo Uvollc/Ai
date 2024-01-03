@@ -63,6 +63,13 @@ class UsersController < ApiController
     end
   end
 
+  def me
+    render json: {
+      status: { code: 200 },
+      data: UserSerializer.new(current_user.reload).serializable_hash[:data]
+    }, status: :ok
+  end
+
   private
 
   def password_params

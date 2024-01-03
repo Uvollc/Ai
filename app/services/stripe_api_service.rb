@@ -47,8 +47,8 @@ class StripeApiService
       Stripe::Customer.list_payment_methods(customer_id)
     end
 
-    def cancel_subscription(subsciption_id)
-      Stripe::Subscription.cancel(subsciption_id)
+    def cancel_subscription(subscription_id)
+      Stripe::Subscription.cancel(subscription_id)
     end
 
     def create_payment_method_session(customer_id, plan: "uvo-ai-plan")
