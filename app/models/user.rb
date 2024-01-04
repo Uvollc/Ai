@@ -18,7 +18,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: false }, presence: true
 
   def valid_subscription?
-    return false if (payment_status == PAYMENT_STATUSES[:pending] && chats&.last&.reached_message_limit?)
+    return false if (pending? && chats&.last&.reached_message_limit?)
 
     true
   end
