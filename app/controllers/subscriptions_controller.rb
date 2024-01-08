@@ -30,20 +30,6 @@ class SubscriptionsController < ApiController
     }, status: :forbidden
   end
 
-  def show
-    session =  StripeApiService.retrieve_session(params[:session_id])
-
-    render json: {
-      status: { code: 200 },
-      data: { status: session.status }
-    }, status: :ok
-
-  rescue Stripe::StripeError => e
-    return render json: {
-      status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
-    }, status: :forbidden
-  end
-
   def payment_methods
     client_secret = StripeApiService.create_payment_method_session(current_user.stripe_customer_id)
 

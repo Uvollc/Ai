@@ -1,5 +1,1 @@
-OpenAI.configure do |config|
-    config.access_token = ENV.fetch("OPENAI_API_KEY")
-end
-
-AI_CLIENT = OpenAI::Client.new
+AI_CLIENT = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY"))

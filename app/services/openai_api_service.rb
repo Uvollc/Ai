@@ -11,30 +11,17 @@ class OpenaiApiService
         thread_id: thread_id,
         parameters: {
           role: "user",
-          content: message})
+          content: message
+        }
+      )
     end
 
-    def run_chat(thread_id)
+    def run_chat(thread_id, public_assistant)
       run = AI_CLIENT.runs.create(
         thread_id: thread_id,
-        parameters: {assistant_id: ENV.fetch("MEDICAL_ASSISTANT_ID")}
+        parameters: {assistant_id: public_assistant ? ENV.fetch("PUBLIC_ASSISTANT_ID") : ENV.fetch("MEDICAL_ASSISTANT_ID")}
       ).transform_keys(&:to_sym)
       run[:id]
-    end
-
-    def wait_on_run(thread_id, run_id)
-      loop do
-        sleep(3)
-        run = AI_CLIENT.runs.retrieve(thread_id: thread_id, id: run_id).transform_keys(&:to_sym)
-        unless run[:status] == "queued" || run[:status] == "in_progress"
-          return true
-        end
-      end
-      return false
-    end
-
-    def retrieve_messages(thread_id)
-      messages = AI_CLIENT.messages.list(thread_id: thread_id)
     end
 
     def delete_chat(thread_id)

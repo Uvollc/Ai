@@ -6,8 +6,9 @@ class ChatsController < ApiController
   before_action :get_chat, except: %i[index create]
 
   def create
-    return action_not_allowed if (current_user.pending? && current_user.chats.count > 0)
-    @chat = current_user.chats.create
+    user_chats_count = current_user.chats.count
+    return action_not_allowed if (current_user.pending? && user_chats_count > 0)
+    @chat = user_chats_count == 0 ? current_user.chats.create(public_assistant: true) : current_user.chats.create
 
     render json: {
       status: { code: 200, message: 'Chat created successfully' },
@@ -32,9 +33,7 @@ class ChatsController < ApiController
   end
 
   def update
-    OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
-    run_id = OpenaiApiService.run_chat(@chat.thread_id)
-    @chat.make_messaging_updates(chat_params[:message])
+    run_id = @chat.make_messaging_updates(chat_params[:message])
 
     render json: {
       status: { code: 200 },
