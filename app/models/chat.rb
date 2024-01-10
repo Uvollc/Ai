@@ -20,7 +20,8 @@ class Chat < ApplicationRecord
   def make_messaging_updates(message)
     OpenaiApiService.create_message(self.thread_id, message)
     run_id = OpenaiApiService.run_chat(self.thread_id, self.public_assistant)
-    self.title = message[0..50] if message_count == 1
+    self.title = message[0..50] if message_count == 0
+    self.title = message[0..50] if (message_count == 1 && public_assistant)
     self.message_count += 1
     self.save
 
