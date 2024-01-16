@@ -1,18 +1,18 @@
 class StripeApiService
   class << self
-    def execute_subscription(customer, plan: "uvo-ai-plan")
+    def execute_subscription(customer)
       Stripe::Subscription.create({
         customer: customer.id,
-        items: [{price: plan}]
+        items: [{price: ENV.fetch("STRIPE_PLAN_ID")}]
       })
     end
 
-    def create_checkout_session(customer, plan: "uvo-ai-plan")
+    def create_checkout_session(customer)
       session = Stripe::Checkout::Session.create({
         ui_mode: 'embedded',
         customer: customer.id,
         line_items: [{
-          price: plan,
+          price: ENV.fetch("STRIPE_PLAN_ID"),
           quantity: 1,
         }],
         mode: 'subscription',
@@ -51,7 +51,7 @@ class StripeApiService
       Stripe::Subscription.cancel(subscription_id)
     end
 
-    def create_payment_method_session(customer_id, plan: "uvo-ai-plan")
+    def create_payment_method_session(customer_id)
       session = Stripe::Checkout::Session.create({
         payment_method_types: ['card'],
         mode: 'setup',
