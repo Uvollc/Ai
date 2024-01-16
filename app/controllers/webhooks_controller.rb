@@ -42,21 +42,24 @@ class WebhooksController < ApiController
     when 'checkout.session.completed'
       return if data_object.mode == 'setup'
       user = get_user(data_object.customer)
-      user.update(payment_status: User::PAYMENT_STATUSES[:paid])
+      user.processing! unless user.paid?
 
       puts "Checkout session completed: #{event.id}, user_status: #{user.payment_status}"
     when 'customer.subscription.created'
-      subsciption = Subscription.create(
-        user: get_user(data_object.customer),
+      user = get_user(data_object.customer)
+      subscription = Subscription.create(
+        user: user,
         status: data_object.status,
         charge_id: data_object.id)
+      user.paid! if data_object.status == 'active'
 
-      puts "Subscription created-> event: #{event.id}, subscription: #{subsciption.id}"
+      puts "Subscription created-> event: #{event.id}, subscription: #{subscription.id}"
     when 'customer.subscription.updated', 'customer.subscription.deleted', 'customer.subscription.paused'
-      subsciption = Subscription.find_by(charge_id: data_object.id)
-      subsciption&.update(status: data_object.status)
+      subscription = Subscription.includes(:user).find_by(charge_id: data_object.id)
+      subscription&.update(status: data_object.status)
+      data_object.status == 'active' ? subscription.user.paid! : subscription.user.pending!
 
-      puts "Subscription updated-> event: #{event.id}, subscription: #{subsciption&.id} #{subsciption&.status}"
+      puts "Subscription updated-> event: #{event.id}, subscription: #{subscription&.id} #{subscription&.status}"
     when 'invoice.created'
       invoice = Invoice.create(
         user: get_user(data_object.customer),

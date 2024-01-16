@@ -21,8 +21,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   resource :public_chats, only: %i[show update]
+  get 'prompts', to: 'api#prompts'
 
   scope :user do
+    get '/', to: 'users#me'
     patch 'update_password', to: 'users#update_password'
     patch 'update_info', to: 'users#update_without_password'
     delete 'deactivate', to: 'users#deactivate'
