@@ -7,6 +7,7 @@ class ChatsController < ApiController
 
   def create
     return return_quota_exceed if current_user.payment_status == User::PAYMENT_STATUSES[:pending] && current_user.chats.count > 0
+
     @chat = current_user.chats.create
 
     render json: {

@@ -18,7 +18,6 @@ class StripeApiService
         mode: 'subscription',
         return_url: ENV.fetch("STRIPE_REDIRECT_URL"),
       })
-
       {clientSecret: session.client_secret}
     end
 
