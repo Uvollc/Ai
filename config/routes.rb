@@ -31,7 +31,6 @@ Rails.application.routes.draw do
     patch 'avatar', to: 'users#update_avatar'
     resources :chats
     post :create_checkout_session, to: "subscriptions#create"
-    get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
     get :invoices, to: "subscriptions#index"
     get :payment_methods, to: "subscriptions#list_payment_methods"
     patch :payment_methods, to: "subscriptions#payment_methods"

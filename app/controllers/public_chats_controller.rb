@@ -4,7 +4,7 @@ class PublicChatsController < ApiController
 
   def show
     unless user_signed_in? || @device&.chat&.present?
-      @device.build_chat
+      @device.build_chat(public_assistant: true)
       @device.save
     end
 
@@ -21,9 +21,7 @@ class PublicChatsController < ApiController
       data: ChatSerializer.new(@chat).serializable_hash[:data]
     }, status: :forbidden if @chat.reached_message_limit?
 
-    OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
-    run_id = OpenaiApiService.run_chat(@chat.thread_id)
-    @chat.make_messaging_updates(chat_params[:message])
+    run_id = @chat.make_messaging_updates(chat_params[:message])
 
     render json: {
       status: { code: 200 },
