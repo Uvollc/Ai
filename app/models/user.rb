@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :chats, as: :chatable, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
+  has_one :subscription, dependent: :destroy
+  has_one_attached :avatar, dependent: :destroy
   # has_many :devices, dependent: :destroy
 
   PAYMENT_STATUSES = { pending: "pending", paid: "paid" }.freeze
@@ -16,7 +18,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: false }, presence: true
 
   def valid_subscription?
-    return false if (self.payment_status == PAYMENT_STATUSES[:pending] && chats&.last&.reached_message_limit?)
+    return false if (payment_status == PAYMENT_STATUSES[:pending] && chats&.last&.reached_message_limit?)
 
     true
   end
@@ -33,6 +35,7 @@ class User < ApplicationRecord
   end
 
   def soft_delete
-    update(delated_at: Time.now)
+    StripeApiService.cancel_subscription(subscription.charge_id) if subscription.present?
+    update(deleted_at: Time.now)
   end
 end

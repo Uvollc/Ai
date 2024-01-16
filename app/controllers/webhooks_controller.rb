@@ -1,10 +1,9 @@
-class WebhooksController < ApplicationController
+class WebhooksController < ApiController
   def create
     webhook_secret = ENV.fetch('STRIPE_WEBOOKS_SECRET')
     payload = request.body.read
     if !webhook_secret.empty?
       sig_header = request.env['HTTP_STRIPE_SIGNATURE']
-      puts "sig_header = #{sig_header}"
       event = nil
 
       begin
@@ -32,16 +31,16 @@ class WebhooksController < ApplicationController
 
     case event.type
     when 'payment_method.attached'
-      # invoice = PaymentMethod.create(
-      #   user: get_user(data_object.customer),
-      #   stripe_method_id: data_object.id,
-      #   status: data_object.status,
-      #   brand: data_object.brand,
-      #   last_digits: data_object.last_digits
-      #   expiry: unix_to_datetime(data_object.expiry))
+      payment_method = PaymentMethod.create(
+        user: get_user(data_object.customer),
+        stripe_method_id: data_object.id,
+        brand: data_object.card.brand,
+        last_digits: data_object.card.last4,
+        expiry: "#{data_object.card.exp_month}/#{data_object.card.exp_year}")
 
-      puts "Payment Method attached: #{event.id}"
+      puts "Payment Method attached: #{event.id}, payment method: #{payment_method.id}"
     when 'checkout.session.completed'
+      return if data_object.mode == 'setup'
       user = get_user(data_object.customer)
       user.update(payment_status: User::PAYMENT_STATUSES[:paid])
 
@@ -55,9 +54,9 @@ class WebhooksController < ApplicationController
       puts "Subscription created-> event: #{event.id}, subscription: #{subsciption.id}"
     when 'customer.subscription.updated', 'customer.subscription.deleted', 'customer.subscription.paused'
       subsciption = Subscription.find_by(charge_id: data_object.id)
-      subsciption.update(status: data_object.status)
+      subsciption&.update(status: data_object.status)
 
-      puts "Subscription updated-> event: #{event.id}, subscription: #{subsciption.id} #{subsciption.status}"
+      puts "Subscription updated-> event: #{event.id}, subscription: #{subsciption&.id} #{subsciption&.status}"
     when 'invoice.created'
       invoice = Invoice.create(
         user: get_user(data_object.customer),

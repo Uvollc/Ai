@@ -1,9 +1,9 @@
-class PublicChatsController < ApplicationController
+class PublicChatsController < ApiController
   respond_to :json
   before_action :set_device
 
   def show
-    unless @device.persisted?
+    unless user_signed_in? || @device&.chat&.present?
       @device.build_chat
       @device.save
     end

@@ -1,5 +1,13 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  def authenticate_admin!
+    if admin_user_signed_in?
+      admin_root_path
+    else
+      redirect_to new_admin_user_session_path
+    end
+  end
 
   protected
 

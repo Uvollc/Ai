@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
-  include RackSessionsFix
+  skip_before_action :verify_authenticity_token
   respond_to :json
 
   private
