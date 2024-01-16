@@ -52,3 +52,4 @@ gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'dotenv-rails'
 gem "ruby-openai"
+gem "stripe"

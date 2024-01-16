@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_21_150540) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_28_080706) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,7 +31,40 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_21_150540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-  
+
+  create_table "invoices", force: :cascade do |t|
+    t.string "status"
+    t.string "currency"
+    t.datetime "dated_at"
+    t.float "total"
+    t.bigint "user_id"
+    t.string "stripe_invoice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.string "last_digits"
+    t.string "brand"
+    t.datetime "expiry"
+    t.string "status"
+    t.bigint "user_id"
+    t.string "stripe_method_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_payment_methods_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "status", default: "pending"
+    t.string "charge_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -43,6 +77,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_21_150540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "jti", null: false
+    t.string "payment_status", default: "pending"
+    t.string "stripe_customer_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
