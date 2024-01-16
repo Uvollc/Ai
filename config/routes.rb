@@ -22,6 +22,12 @@ Rails.application.routes.draw do
     patch 'update_password', to: 'users#update_password'
     patch 'update_info', to: 'users#update_without_password'
     delete 'deactivate', to: 'users#deactivate'
-    resources :chats
+    post :create_checkout_session, to: "subscriptions#create"
+    get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
+    get :invoices, to: "subscriptions#index"
+    get :payment_methods, to: "subsciptions#list_payment_methods"
+    post 'stripe/webhooks', to: "webhooks#create"
+
+    # stripe listen --forward-to localhost:3000/user/stripe/webhooks
   end
 end
