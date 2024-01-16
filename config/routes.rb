@@ -19,8 +19,9 @@ Rails.application.routes.draw do
   resource :public_chats, only: %i[show update]
 
   scope :user do
-    resources :chats
-    # resources :subscriptions, only: %i[create index]
+    patch 'update_password', to: 'users#update_password'
+    patch 'update_info', to: 'users#update_without_password'
+    delete 'deactivate', to: 'users#deactivate'
     post :create_checkout_session, to: "subscriptions#create"
     get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
     get :invoices, to: "subscriptions#index"
