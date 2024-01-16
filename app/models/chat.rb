@@ -1,7 +1,8 @@
 class Chat < ApplicationRecord
   belongs_to :chatable, polymorphic: true
 
-  before_create -> (chat) { chat.thread_id = OpenaiApiService.create_chat}
+  before_create -> (chat) { chat.thread_id = OpenaiApiService.create_chat }
+  before_destroy -> (chat) { OpenaiApiService.delete_chat(chat.thread_id) }
 
   MESSAGE_LIMIT = 3
 
@@ -10,10 +11,12 @@ class Chat < ApplicationRecord
   end
 
   def reached_message_limit?
-    self.message_count == MESSAGE_LIMIT
+    self.message_count >= MESSAGE_LIMIT
   end
 
-  def increment_message_count
-    self.update(message_count: self.message_count+1)
+  def make_messaging_updates(message)
+    self.title = message[0..50] if message_count == 0
+    self.message_count += 1
+    self.save
   end
 end

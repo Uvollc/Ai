@@ -10,7 +10,7 @@ class PublicChatsController < ApplicationController
 
     render json: {
       status: { code: 200 },
-      data: ChatSerializer.new(@device.chat).serializable_hash[:data]
+      data: ChatSerializer.new(@device.chat, params: { welcome_flag: true }).serializable_hash[:data]
     }, status: :ok
   end
 
@@ -23,7 +23,7 @@ class PublicChatsController < ApplicationController
 
     OpenaiApiService.create_message(@chat.thread_id, chat_params[:message])
     run_id = OpenaiApiService.run_chat(@chat.thread_id)
-    @chat.increment_message_count
+    @chat.make_messaging_updates(chat_params[:message])
 
     render json: {
       status: { code: 200 },
@@ -34,7 +34,7 @@ class PublicChatsController < ApplicationController
   private
 
   def set_device
-    @device = Device.find_or_initialize_by(device_token: device_param)
+    @device = Device.includes(:chat).find_or_initialize_by(device_token: device_param)
   end
 
   def chat_params
@@ -42,6 +42,6 @@ class PublicChatsController < ApplicationController
   end
 
   def device_param
-    params.permit(:device_token)[:device_token]
+    params.permit(:device_token)[:device_token].to_s
   end
 end
