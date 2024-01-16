@@ -30,7 +30,6 @@ Rails.application.routes.draw do
     delete 'deactivate', to: 'users#deactivate'
     patch 'avatar', to: 'users#update_avatar'
     resources :chats
-    # resources :subscriptions, only: %i[create index]
     post :create_checkout_session, to: "subscriptions#create"
     get :checkout_session_status, to: "subscriptions#show" #not used on FE for now
     get :invoices, to: "subscriptions#index"

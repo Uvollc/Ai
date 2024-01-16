@@ -7,6 +7,7 @@ class ChatsController < ApiController
 
   def create
     return action_not_allowed if (current_user.pending? && current_user.chats.count > 0)
+
     @chat = current_user.chats.create
 
     render json: {
@@ -44,6 +45,7 @@ class ChatsController < ApiController
 
   def destroy
     return action_not_allowed if current_user.pending?
+
     @chat.destroy
 
     render json: {
