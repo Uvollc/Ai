@@ -12,7 +12,6 @@ class Chat < ApplicationRecord
     "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
   end
 
-
   def reached_message_limit?
     self.message_count >= MESSAGE_LIMIT
   end

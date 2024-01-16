@@ -43,6 +43,7 @@ class ChatsController < ApiController
 
   def destroy
     return action_not_allowed if current_user.pending?
+
     @chat.destroy
 
     render json: {
