@@ -23,5 +23,7 @@ class Chat < ApplicationRecord
     self.title = message[0..50] if (message_count == 1 && public_assistant)
     self.message_count += 1
     self.save
+
+    run_id
   end
 end
