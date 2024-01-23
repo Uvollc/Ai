@@ -62,5 +62,9 @@ class StripeApiService
 
       {clientSecret: session.client_secret}
     end
+
+    def delete_customer(customer_id)
+      Stripe::Customer.delete(customer_id)
+    end
   end
 end
