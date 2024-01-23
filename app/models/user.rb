@@ -17,6 +17,8 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: { case_sensitive: false }, presence: true
 
+  after_destroy -> (user) { StripeApiService.delete_customer(user.stripe_customer_id) if user.stripe_customer_id.present? }
+
   def valid_subscription?
     return false if (pending? && chats&.last&.reached_message_limit?)
 
