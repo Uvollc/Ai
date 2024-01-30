@@ -3,6 +3,8 @@ class PublicChatsController < ApiController
   before_action :set_device
 
   def show
+    puts "request ip", request.ip
+    puts "request remote ip", request.remote_ip
     unless user_signed_in? || @device&.chat&.present?
       @device.build_chat(public_assistant: true)
       @device.save
