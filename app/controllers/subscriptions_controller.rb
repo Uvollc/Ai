@@ -26,7 +26,7 @@ class SubscriptionsController < ApiController
 
   rescue Stripe::StripeError => e
     return render json: {
-      status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
+      status: { code: 403, message: "Invalid Stripe Operation: #{e.message}" },
     }, status: :forbidden
   end
 
@@ -40,7 +40,7 @@ class SubscriptionsController < ApiController
 
   rescue Stripe::StripeError => e
     return render json: {
-      status: { code: 400, message: "Invalid Stripe Operation: #{e.message}" },
+      status: { code: 403, message: "Invalid Stripe Operation: #{e.message}" },
     }, status: :forbidden
   end
 

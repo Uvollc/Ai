@@ -7,9 +7,9 @@ class Chat < ApplicationRecord
   MESSAGE_LIMIT = 4
 
   def welcome_message
-    return "Please agree & acknowledge that you are aware I'm not a substitute for professional medical evaluation, so it's important to consult a healthcare provider for accurate diagnosis and treatment even if I answer your medical question.  Do you agree to our terms of service?" if public_assistant
+    return Setting.find_by(name: "agreement_message").value if public_assistant
 
-    "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."
+    Setting.find_by(name: "welcome_message").value
   end
 
   def reached_message_limit?

@@ -42,7 +42,7 @@ class UsersController < ApiController
       }, status: :ok
     else
       render json: {
-        status: {message: "Password couldn't be updated. #{@user.errors.full_messages.to_sentence}"}
+        status: { message: "Password couldn't be updated. #{@user.errors.full_messages.to_sentence}" }
       }, status: :unprocessable_entity
     end
   end
@@ -58,7 +58,7 @@ class UsersController < ApiController
       }, status: :ok
     else
       render json: {
-        status: {message: "Can't update avatar. #{@user.errors.full_messages.to_sentence}"}
+        status: { message: "Can't update avatar. #{@user.errors.full_messages.to_sentence}" }
       }, status: :unprocessable_entity
     end
   end
