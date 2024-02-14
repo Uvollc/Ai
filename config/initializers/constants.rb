@@ -1,0 +1,2 @@
+AGREEMENT_MESSAGE = "Please agree & acknowledge that you are aware I'm not a substitute for professional medical evaluation, so it's important to consult a healthcare provider for accurate diagnosis and treatment even if I answer your medical question.  Do you agree to our terms of service?"
+WELCOME_MESSAGE = "Hello, what is your health related question? Tell me your symptoms or ask me general health questions like a lab result or what does diastolic pressure mean."

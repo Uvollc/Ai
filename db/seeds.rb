@@ -28,6 +28,12 @@ prompts_list = [
     order: 3
   }
 ]
-prompts_list.each do |prompt|
-  Prompt.create(prompt)
+if Prompt.count == 0
+  prompts_list.each { |prompt| Prompt.create(prompt) }
+end
+
+if Setting.count == 0
+  Setting.create(name: "chats_welcome_message", value: WELCOME_MESSAGE)
+  Setting.create(name: "chats_agreement_message", value: AGREEMENT_MESSAGE)
+  Setting.create(name: "public_access", value: "true")
 end
