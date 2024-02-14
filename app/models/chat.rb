@@ -7,9 +7,9 @@ class Chat < ApplicationRecord
   MESSAGE_LIMIT = 4
 
   def welcome_message
-    return Setting.find_by(name: "agreement_message").value if public_assistant
+    return Setting.find_by(name: "chats_agreement_message").value if public_assistant
 
-    Setting.find_by(name: "welcome_message").value
+    Setting.find_by(name: "chats_welcome_message").value
   end
 
   def reached_message_limit?
