@@ -46,7 +46,7 @@ class PublicChatsController < ApiController
 
   def public_chats_permissible?
     return render json: {
-      status: { code: 403, message: "Public Chats not allowed." },
+      status: { code: 403, message: "Public chats not allowed." },
     }, status: :forbidden unless Setting.find_by(name: "public_access").value == "true"
   end
 end

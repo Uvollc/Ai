@@ -12,7 +12,7 @@ class ApiController < ActionController::API
   def public_access
     render json: {
       status: { code: 200 },
-      data: { public_access: Setting.find_by(name: "public_access").value }
+      data: { chat_access: Setting.find_by(name: "public_access").value }
     }, status: :ok
   end
 end
