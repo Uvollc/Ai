@@ -1,10 +1,9 @@
 class PublicChatsController < ApiController
   respond_to :json
+  before_action :public_chats_permissible?
   before_action :set_device
 
   def show
-    puts "request ip", request.ip
-    puts "request remote ip", request.remote_ip
     unless user_signed_in? || @device&.chat&.present?
       @device.build_chat(public_assistant: true)
       @device.save
@@ -43,5 +42,11 @@ class PublicChatsController < ApiController
 
   def device_param
     params.permit(:device_token)[:device_token].to_s
+  end
+
+  def public_chats_permissible?
+    return render json: {
+      status: { code: 403, message: "Public chats not allowed." },
+    }, status: :forbidden unless Setting.find_by(name: "public_access").value == "true"
   end
 end

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   resource :public_chats, only: %i[show update]
   get 'prompts', to: 'api#prompts'
+  get 'public_access', to: 'api#public_access'
 
   scope :user do
     get '/', to: 'users#me'
