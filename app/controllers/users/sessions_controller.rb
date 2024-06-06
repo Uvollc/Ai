@@ -26,10 +26,19 @@ class Users::SessionsController < Devise::SessionsController
         message: 'Logged out successfully.'
       }, status: :ok
     else
-      render json: {
+      render_no_active_session
+    end
+
+  rescue JWT::ExpiredSignature => e
+    render_no_active_session
+  end
+
+  private
+
+  def render_no_active_session
+    render json: {
         status: 401,
         message: "Couldn't find an active session."
       }, status: :unauthorized
-    end
   end
 end
